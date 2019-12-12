@@ -3,13 +3,13 @@
     <b-card>
         <div class="panel-heading">
           <h3 class="panel-title">{{ stock.name }}</h3>
-          <small>(Price: {{ stock.price + '$' }})</small>
+          <small>(Price: {{ stock.price + '$' }} | Quantity: {{ stock.quantity }})</small>
         </div>
         <div class="panel-body">
           <div class="pull-left">
               <b-form-input type="number" v-model.number="quantity" placeholder="Quantity"></b-form-input>
           </div>
-          <b-button @click="buyStock" :disabled="quantity <= 0 || !Number.isInteger(quantity)" variant="success">Buy</b-button>
+          <b-button @click="sellStock" :disabled="quantity <= 0 || !Number.isInteger(quantity)" variant="success">Sell</b-button>
         </div>
     </b-card>
   </b-col>
@@ -24,13 +24,13 @@ export default {
     }
   },
   methods: {
-    buyStock () {
+    sellStock () {
       const order = {
         stockId: this.stock.id,
         stockPrice: this.stock.price,
         quantity: this.quantity
       }
-      this.$store.dispatch('buyStock', order)
+      this.$store.dispatch('sellStock', order)
       this.quantity = 0
     }
   }
