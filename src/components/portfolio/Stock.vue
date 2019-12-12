@@ -7,9 +7,13 @@
         </div>
         <div class="panel-body">
           <div class="pull-left">
-              <b-form-input type="number" v-model.number="quantity" placeholder="Quantity"></b-form-input>
+              <b-form-input type="number" v-model.number="quantity" placeholder="Quantity" :class="{danger: insufficientQuantity}"></b-form-input>
           </div>
-          <b-button @click="sellStock" :disabled="quantity <= 0 || !Number.isInteger(quantity)" variant="success">Sell</b-button>
+          <b-button @click="sellStock"
+                    :disabled="insufficientQuantity || quantity <= 0 || !Number.isInteger(quantity)"
+                    variant="success">
+          {{ insufficientQuantity ? 'Not Enough' : 'Sell' }}
+          </b-button>
         </div>
     </b-card>
   </b-col>
@@ -21,6 +25,11 @@ export default {
   data () {
     return {
       quantity: 0
+    }
+  },
+  computed: {
+    insufficientQuantity () {
+      return this.quantity > this.stock.quantity
     }
   },
   methods: {
@@ -45,5 +54,8 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+  }
+  .danger {
+    border: 1px solid red
   }
 </style>

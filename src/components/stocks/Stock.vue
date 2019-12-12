@@ -7,9 +7,11 @@
         </div>
         <div class="panel-body">
           <div class="pull-left">
-              <b-form-input type="number" v-model.number="quantity" placeholder="Quantity"></b-form-input>
+              <b-form-input type="number" v-model.number="quantity" placeholder="Quantity" :class="{danger: insufficientFunds}"></b-form-input>
           </div>
-          <b-button @click="buyStock" :disabled="quantity <= 0 || !Number.isInteger(quantity)" variant="success">Buy</b-button>
+          <b-button @click="buyStock" :disabled=" insufficientFunds || quantity <= 0 || !Number.isInteger(quantity)" variant="success">
+            {{ insufficientFunds ? 'insufficient Funds': 'Buy' }}
+          </b-button>
         </div>
     </b-card>
   </b-col>
@@ -21,6 +23,14 @@ export default {
   data () {
     return {
       quantity: 0
+    }
+  },
+  computed: {
+    funds () {
+      return this.$store.getters.funds
+    },
+    insufficientFunds () {
+      return this.quantity * this.stock.price > this.funds
     }
   },
   methods: {
@@ -45,5 +55,8 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+  }
+  .danger {
+    border: 1px solid red
   }
 </style>
